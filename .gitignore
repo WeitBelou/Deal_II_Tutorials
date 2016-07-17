@@ -63,6 +63,9 @@
 # IntelliJ
 /out/
 
+# Examples output directory
+output/
+
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
