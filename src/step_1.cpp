@@ -13,10 +13,10 @@ void first_grid ()
     Triangulation<2> triangulation;
     GridGenerator::hyper_cube (triangulation);
     triangulation.refine_global (4);
-    std::ofstream out ("simpleRectGrid.eps");
+    std::ofstream out ("simpleRectGrid.ucd");
     GridOut gridOut;
-    gridOut.write_eps (triangulation, out);
-    std::cout << "Grid written to simpleRectGrid.eps" << std::endl;
+    gridOut.write_ucd (triangulation, out);
+    std::cout << "Grid written to simpleRectGrid.ucd" << std::endl;
 }
 void second_grid ()
 {
