@@ -47,7 +47,7 @@ public:
 
 template <int dim>
 double Coefficient<dim>::value (const Point<dim> &p,
-                                const unsigned int component) const
+                                const unsigned int /*component*/) const
 {
     if (p.square() < 0.25) {
         return 20;
@@ -263,6 +263,10 @@ void ExtendedPoissonProblem<dim>::outputResults (const unsigned int cycle) const
     epsFlags.z_scaling = 4;
     epsFlags.azimut_angle = 40;
     epsFlags.turn_angle = 10;
+
+    if (cycle > 3) {
+        epsFlags.draw_mesh = false;
+    }
 
     dataOut.set_flags(epsFlags);
 
