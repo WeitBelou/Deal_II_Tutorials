@@ -12,7 +12,7 @@ deal_ii_initialize_cached_variables()
 file(GLOB_RECURSE STEPS_SOURCES "${CMAKE_CURRENT_LIST_DIR}/src/" *.cpp)
 
 foreach(SOURCE ${STEPS_SOURCES})
-    get_filename_component(filename ${SOURCE} NAME)
+    get_filename_component(filename ${SOURCE} NAME_WE)
     add_executable(${filename} ${SOURCE})
     deal_ii_setup_target(${filename})
 endforeach()
