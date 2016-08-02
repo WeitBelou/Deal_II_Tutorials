@@ -9,6 +9,7 @@
 #include <list>
 #include <iostream>
 #include <fstream>
+#include <stdlib.h>
 
 namespace step19
 {
@@ -44,7 +45,7 @@ namespace step19
 
     void declareParameters ()
     {
-        prm.declare_entry("Output file", "", Patterns::Anything,
+        prm.declare_entry("Output file", "", Patterns::Anything(),
                           "The name of the output file to be generate");
 
         DataOutInterface<1>::declare_parameters(prm);
@@ -72,7 +73,7 @@ namespace step19
     {
         if (argc < 2) {
             printUsageMessage();
-            exit(0);
+            ::exit(1);
         }
 
         std::list<std::string> args(argc);
@@ -84,8 +85,8 @@ namespace step19
                     std::cerr << "Error: flag '-p' must be followed by the "
                               << "name of a parameter file."
                               << std::endl;
-                    print_usage_message ();
-                    exit (1);
+                    printUsageMessage ();
+                    ::exit (1);
                 }
                 args.pop_front();
                 const std::string parameterFile = args.front();
@@ -113,8 +114,8 @@ namespace step19
                     std::cerr << "Error: flag '-o' must be followed by the "
                               << "name of an output file."
                               << std::endl;
-                    print_usage_message ();
-                    exit (1);
+                    printUsageMessage ();
+                    ::exit(1);
                 }
                 args.pop_front ();
                 outputFile = args.front();
@@ -128,7 +129,7 @@ namespace step19
         if (inputFileNames.empty()) {
             std::cerr << "Error: No input file specified." << std::endl;
             printUsageMessage();
-            exit(1);
+            ::exit(1);
         }
     }
 
