@@ -267,8 +267,8 @@ public:
     virtual size_t n_dofs () const override;
 
 protected:
-    const SmartPointer<FiniteElement<dim>> fe;
-    const SmartPointer<Quadrature<dim>> quadrature;
+    const SmartPointer<const FiniteElement<dim>> fe;
+    const SmartPointer<const Quadrature<dim>> quadrature;
     DoFHandler<dim> dofHandler;
     Vector<double> solution;
     const SmartPointer<const Function<dim>> boundaryValues;
@@ -735,7 +735,7 @@ void RefinementKelly<dim>::refine_grid()
     GridRefinement::refine_and_coarsen_fixed_number (*this->triangulation,
                                                      estimatedErrorPerCell,
                                                      0.3, 0.03);
-    triangulation->execute_coarsening_and_refinement ();
+    this->triangulation->execute_coarsening_and_refinement ();
 }
 
 //end namespace LaplaceSolver
