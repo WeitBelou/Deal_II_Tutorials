@@ -735,6 +735,23 @@ void RefinementKelly<dim>::refine_grid()
     GridRefinement::refine_and_coarsen_fixed_number (*this->triangulation,
                                                      estimatedErrorPerCell,
                                                      0.3, 0.03);
+
+    bool refinementIndicated = false;
+    for (auto cell : this->triangulation->active_cell_iterators())
+        for (unsigned int v=0; v < GeometryInfo<dim>::vertices_per_cell; ++v)
+            if (cell->vertex(v) == Point<dim>(0.5, 0.5))
+            {
+                cell->clear_coarsen_flag();
+                refinementIndicated |= cell->refine_flag_set();
+            }
+
+    if (refinementIndicated)
+        for (auto cell : this->triangulation->active_cell_iterators())
+            for (unsigned int v=0; v<GeometryInfo<dim>::vertices_per_cell; ++v)
+                if (cell->vertex(v) == Point<dim>(0.5, 0.5))
+                    cell->set_refine_flag ();
+
+
     this->triangulation->execute_coarsening_and_refinement ();
 }
 
@@ -764,7 +781,7 @@ double Solution<dim>::value(const Point<dim> &p,
                             const size_t /*component*/) const
 {
     double q = p(0);
-    for (size_t i = 0; i < dim; ++i) {
+    for (size_t i = 1; i < dim; ++i) {
         q += std::sin(10 * p(i) + 5 * p(0) * p(0));
     }
     const double exponential = std::exp(q);
@@ -795,10 +812,9 @@ double RightHandSide<dim>::value(const Point<dim> &p,
     for (size_t i = 1; i < dim; ++i) {
         t[0] += std::cos(10 * p(i) + 5 * p(0) * p(0)) * 10 * p(0);
         t[1] += 10 * std::cos(10 * p(i) + 5 * p(0) * p(0)) -
-                100 * std::sin(10 * p(i) + 5 * p(0) * p(0));
-        t[2] += 100 * std::cos(10 * p(i)+5 * p(0) * p(0)) *
-                std::cos(10 * p(i)+5 * p(0) * p(0)) -
-                100 * std::sin(10 * p(i)+5 * p(0) * p(0));
+            100 * std::sin(10 * p(i)+5 * p(0)*p(0)) * p(0) * p(0);
+        t[2] += 100 * std::cos(10 * p(i) + 5 * p(0) * p(0)) * std::cos(10 * p(i) + 5 * p(0) * p(0)) -
+            100 * std::sin(10 * p(i) + 5 * p(0) * p(0));
     }
     t[0] = t[0] * t[0];
 
