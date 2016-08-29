@@ -102,7 +102,7 @@ namespace step7
         double returnValue = 0.0;
         const double widthSquare = this->width * this->width;
 
-        for (int i = 0; i < this->nSourceCenters; ++i) {
+        for (size_t i = 0; i < this->nSourceCenters; ++i) {
             const Tensor<1, dim> xMinusXi = p - this->sourceCenters[i];
             returnValue += std::exp(-xMinusXi.norm_square() /
                                     widthSquare);
@@ -117,7 +117,7 @@ namespace step7
         Tensor<1, dim> returnValue;
         const double widthSquare = this->width * this->width;
 
-        for (int i = 0; i < this->nSourceCenters; ++i) {
+        for (size_t i = 0; i < this->nSourceCenters; ++i) {
             const Tensor<1, dim> xMinusXi = p - this->sourceCenters[i];
 
             returnValue += (-2 / widthSquare *
@@ -154,7 +154,7 @@ namespace step7
         double returnValue = 0;
         const double widthSquare = this->width * this->width;
 
-        for (int i = 0; i < this->nSourceCenters; ++i) {
+        for (size_t i = 0; i < this->nSourceCenters; ++i) {
             const Tensor<1, dim> xMinusXi = p - this->sourceCenters[i];
 
             returnValue += ((2 * dim - 4 * xMinusXi.norm_square() /
@@ -285,9 +285,9 @@ namespace step7
             rightHandSide.value_list(feValues.get_quadrature_points(),
                                      rhsValues);
 
-            for (int qPoint = 0; qPoint < nQPoints; ++qPoint) {
-                for (int i = 0; i < dofsPerCell; ++i) {
-                    for (int j = 0; j < dofsPerCell; ++j) {
+            for (size_t qPoint = 0; qPoint < nQPoints; ++qPoint) {
+                for (size_t i = 0; i < dofsPerCell; ++i) {
+                    for (size_t j = 0; j < dofsPerCell; ++j) {
                         cellMatrix(i, j) += ((feValues.shape_grad(i, qPoint) *
                                               feValues.shape_grad(j, qPoint)
                                               +
@@ -302,17 +302,17 @@ namespace step7
                 }
             }
 
-            for (int faceNumber = 0; faceNumber < GeometryInfo<dim>::faces_per_cell;
+            for (size_t faceNumber = 0; faceNumber < GeometryInfo<dim>::faces_per_cell;
                  ++faceNumber) {
                 if (cell->face(faceNumber)->at_boundary() &&
                     (cell->face(faceNumber)->boundary_id() == 1)) {
                     feFaceValues.reinit(cell, faceNumber);
 
-                    for (int qPoint = 0; qPoint < nFaceQPoints; ++qPoint) {
+                    for (size_t qPoint = 0; qPoint < nFaceQPoints; ++qPoint) {
                         const double neumannValue =
                            ( exactSolution.gradient(feFaceValues.quadrature_point(qPoint)) *
                              feFaceValues.normal_vector(qPoint));
-                        for (int i = 0; i < dofsPerCell; ++i) {
+                        for (size_t i = 0; i < dofsPerCell; ++i) {
                             cellRhs(i) += (neumannValue *
                                            feFaceValues.shape_value(i, qPoint) *
                                            feFaceValues.JxW(qPoint));
@@ -322,8 +322,8 @@ namespace step7
             }
 
             cell->get_dof_indices(localDofIndices);
-            for (int i = 0; i < dofsPerCell; ++i) {
-                for (int j = 0; j <dofsPerCell; ++j) {
+            for (size_t i = 0; i < dofsPerCell; ++i) {
+                for (size_t j = 0; j <dofsPerCell; ++j) {
                     systemMatrix.add(localDofIndices[i],
                                      localDofIndices[j],
                                      cellMatrix(i, j));
